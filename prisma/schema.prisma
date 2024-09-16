@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URL")
+}
+
+model TokenBuy {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenName    String
+  tokenAddress String   @unique
+  tag          String
+  bots         String[]
+  expires      DateTime
+  gif          String
+  link         String
+}
+
+model Trending {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenName    String
+  tokenAddress String
+  sol          Float
+  expiresAt    DateTime
+}
+
+model Shill {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenName    String
+  tokenAddress String
+  channels     String[]
+  expiresAt    DateTime
+  message      String
+}
+
+model BotChannels {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  tokenKey  String   @unique
+  channels  String[]
+}
+
+model TrendPosition {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenAddress String   @unique
+  tokenName    String
+  tag          String
+  link         String
+  position     Int
+  price        String
+  cap          Int
+}
+
+model TrendingQueue {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenAddress String   @unique
+  time         Int
+  tokenName    String
+  tag          String
+  telegram     String
+  link         String
+}
+
+model Ads {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  address   String   @unique
+  text      String
+  url       String
+  expiresAt DateTime
+}
+
+model AdQueue {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  address   String   @unique
+  text      String
+  url       String
+  telegram  String
+  time      Int
+}
+
+model Prices {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  type   String
+  prices String[]
+}
+
+model BuyBotWaiting {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenName    String
+  tokenAddress String
+  tag          String
+  owner        String
+  telegram     String
+  link         String
+  channel      String
+}
+
+model PinPost {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  tokenName    String
+  tokenAddress String   @unique
+  tag          String
+  message      String
+  telegram     String
+}
