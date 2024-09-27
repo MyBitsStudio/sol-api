@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     try {
 
-        const receiverAddress = "3H3aVKZN3pb9Kmd2pfQnAexPKQk2AGnFwLVtLNVp5twK";
+        const receiverAddress = "wiFhLXRKSFqx1Pkyei2KiznM2sHo6wqJwf59eDJaTRo";
         const connection = new Connection(NETWORK);
 
         const payer = new PublicKey(webhookData.payerAddress);
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
         console.log("transaction", transaction)
 
-        const blockHash = (await connection.getLatestBlockhash("finalized"))
+        const blockHash = (await connection.getLatestBlockhash("confirmed"))
             .blockhash;
 
         console.log("blockHash", blockHash)

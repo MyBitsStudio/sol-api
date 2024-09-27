@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
         const connection = new Connection(NETWORK);
 
-        const latestBlockhash = await connection.getLatestBlockhash("finalized");
+        const latestBlockhash = await connection.getLatestBlockhash("confirmed");
         try {
             const confirmation = await connection.confirmTransaction({
                 signature: webhookData.txSignature,

@@ -44,15 +44,15 @@ export async function sendBuyMessage(details: BuyMessage) {
             const price = bold`🎲 : ${details.details.sol} SOL ( $ ${details.spent.toFixed(2)} )`;
             const got = bold`💵: ${details.details.token} $${details.details.tag}`;
             const newPrice = bold`💎: $ ${details.price}`;
-            const owner = link(bold`👤: ${address}`, 'https://solscan.io/account/' + details.details.toAccount);
+            const owner = link(bold`👤`, 'https://solscan.io/account/' + details.details.toAccount);
             const position = bold`📈: + ${details.position}`;
             const cap = bold`🏦: $ ${details.price} ( $${caps} )`;
-            const tran = link(bold`🔗 TRANSACTION`, 'https://solscan.io/tx/' + details.details.signature);
-            const chart = link(bold`📊 CHART`, 'https://dexscreener.com/solana/' + details.details.tokenAddress);
-            const trending = link(bold`🎰 TRENDING`, 'https://t.me/professor_nahm');
-            const support = link(bold`📩 SUPPORT`, 'https://t.me/professor_nahm');
-            const trend = details.trending === -1 ? `` : link(bold`🎰 TRENDING ${details.trending} 🎰`, 'https://t.me/WIFLOUNGE1/141') ;
-            const ad = link(bold`🎁 PURCHASE`, 'https://t.me/professor_nahm');
+            const tran = link(bold`🔗`, 'https://solscan.io/tx/' + details.details.signature);
+            const chart = link(bold`📊`, 'https://dexscreener.com/solana/' + details.details.tokenAddress);
+            const trending = link(bold`🎰`, 'https://t.me/WIFTRENDING/4971/4984');
+            const support = link(bold`📩`, 'https://t.me/professor_nahm');
+            const trend = details.trending === -1 ? `` : link(bold`🎰 TRENDING ${details.trending} 🎰`, 'https://t.me/WIFTRENDING/4971/4984') ;
+            const ad = link(bold`🎁 BUY AD`, 'https://www.wiftrending.app');
 
             let ad1, ad2, ad3, ad4;
 
@@ -66,18 +66,30 @@ export async function sendBuyMessage(details: BuyMessage) {
 
             const format = fmt`
     ${newBuy} \n\n ${emoji20} \n\n ${price} \n ${got}  \n ${position} \n ${cap}  
-    \n\n ${chart} | ${trending} | ${support} \n ${tran} | ${owner} \n\n ${ad1} | ${ad2} \n\ ${ad3} | ${ad4} \n\n  ${trend} \n\n
+     \n ${ad1} | ${ad2} \n\ ${ad3} | ${ad4} \n\n  ${trend} \n\n ${chart} | ${trending} | ${support} | ${tran} | ${owner}
     `;
 
             try {
 
                 const channels = bots.channels.map((channel: string) => {
-                    return parseInt(channel);
+                        return channel;
                 })
 
                 for(let i = 0; i < channels.length; i++) {
-                    await bot.telegram.sendAnimation(channels[i], Input.fromLocalFile("E:\\business\\elon\\sol-api\\public\\gifs\\WifBuy.mp4"), {
-                        caption: format
+                    let message_thread = undefined;
+                    let channel = undefined;
+
+                    if(channels[i].includes(":")){
+                        const split = channels[i].split(":");
+                        channel = parseInt(split[0]);
+                        message_thread = parseInt(split[1]);
+                    } else {
+                        channel = parseInt(channels[i]);
+                    }
+
+                    await bot.telegram.sendAnimation(channel, "https://igate.email/wif_assets/WifBuy.mp4", {
+                        caption: format,
+                        message_thread_id: message_thread
                     }).catch((err) => {
                         console.log(`Ooops, encountered an error `, err)
                     });
@@ -99,7 +111,7 @@ export async function sendBuyMessage(details: BuyMessage) {
 
 export async function updateTrendingMessage() {
 
-    const messageId = 876;
+    const messageId = 4984;
     const bot = new Telegraf("7206357706:AAFf4355Lr1KralPI7v_qy4h_1ZCaZ5P3yQ", {
         telegram: {
             apiMode: 'bot',
@@ -109,8 +121,9 @@ export async function updateTrendingMessage() {
 
     // @ts-ignore
     if(messageId === -1){
-        await bot.telegram.sendAnimation(-1002149168327, Input.fromLocalFile("E:\\business\\elon\\sol-api\\public\\gifs\\WifBuy.mp4"), {
-            caption: "PIN ME AND DONT DELETE!!"
+        await bot.telegram.sendAnimation(-1002149168327, "https://igate.email/wif_assets/WifBuy.mp4", {
+            caption: "PIN ME AND DONT DELETE!!",
+            message_thread_id: 4971
         }).then((res) => {
             console.log("Trending Bot Pin Message", res);
         }).catch((err) => {
@@ -151,11 +164,13 @@ export async function updateTrendingMessage() {
         for(let i = 0; i < formatted.length; i++) {
             format = fmt`${format} ${link(bold`${formatted[i]}`, trend[i].link)} \n\n`;
             if(i === formatted.length - 1){
-                format = fmt`${format} \n\n ${link(bold`🎰 BUY TRENDING`, 'https://t.me/professor_nahm')}`;
+                format = fmt`${format} \n\n ${link(bold`🎰 BUY TRENDING`, 'https://www.wiftrending.app')}`;
             }
         }
 
-        await bot.telegram.editMessageCaption(-1002149168327, messageId, undefined, format).catch((err) => {
+        await bot.telegram.editMessageCaption(-1002149168327, messageId, undefined, format, {
+
+        }).catch((err) => {
             console.log(`Shit, encountered an error `, err)
         });
 

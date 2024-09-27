@@ -28,6 +28,9 @@ export async function POST(req: Request){
 
         const build = JSON.parse(JSON.stringify(transformedObject.tokenTransfers));
 
+        console.log("build", build);
+
+
         if (transformedObject.transactionError !== null && transformedObject.transactionError !== undefined) {
             console.log("Transaction Error", transformedObject.transactionError);
             return NextResponse.json({ error: "Transaction Error"})
@@ -43,7 +46,7 @@ export async function POST(req: Request){
         let solAmount : number = 0;
         let tokenAmount : number = 0;
         let toAccount : string ;
-        let token : string;
+
 
         if(!breaks){
             console.log("No breaks");
@@ -59,31 +62,44 @@ export async function POST(req: Request){
             solAmount = Number(breaks[2]);
             tokenAmount = Number(breaks[5]);
             toAccount = breaks[0];
-            const build1 = build[0];
 
-            if(!build1){
-                console.log("No build1");
-                return NextResponse.json({ error: "No build1" })
-            }
+            let token : string;
 
-            if(build1.mint !== SOL_ADDRESS){
-                token = build1.mint;
+            const events = transformedObject.events;
+
+            console.log("events", events);
+
+            const swap = events.swap;
+
+            if(swap){
+                let swapping;
+
+                for (const key in transformData(swap)) {
+                    swapping = transformData(swap[key]);
+                }
+
+
+                console.log("swapping", swapping);
+                console.log("swapping mint", swapping[0].mint);
+                token = swapping[0].mint;
             } else {
-                token = build[1].mint;
+                console.log("No swap");
+                return NextResponse.json({ error: "No swap"})
             }
+
 
             const user = await prisma.tokenBuy.findUnique({
                 where: {tokenAddress: token},
             })
 
             if (!user) {
-                console.log("No User");
-                return;
+                console.log("No User for token "+ token);
+                return NextResponse.json({ error: "No user"})
             }
 
             if(user.expires < new Date()) {
                 console.log("Expired 1");
-                return;
+                return NextResponse.json({ error: "Expired"})
             }
 
             const details : Details = {
@@ -102,9 +118,8 @@ export async function POST(req: Request){
 
             return NextResponse.json({ ok: true })
 
-        } else if(breaks[1] === "swapped" && breaks[6] === "SOL") {
-            console.log("sold " + breaks[2] + " for " + breaks[5]);
-            return NextResponse.json({ error: "No breaks length"})
+        } else {
+            return NextResponse.json({ error: "Not a buy"})
         }
 
         return NextResponse.json({ ok: true })

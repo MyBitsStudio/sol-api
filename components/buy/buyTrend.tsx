@@ -227,13 +227,19 @@ export function TrendBot(props: { toggle: MouseEventHandler<HTMLButtonElement> |
                             <div>
                                 <br/>
                                 <p className={"text-center"}>
-                                    Purchase Trending on WIF Trending! After purchasing, you will be put into the queue. Others
+                                    Purchase Trending on WIF Trending! After purchasing, you will be put into the queue.
+                                    Others
                                     may be still running their time, so please be patient.
                                     <br/>
 
-                                    <b>(Telegram ID is your unique user ID, not your username. You can find it in your settings.)</b>
+                                    <b>(Telegram ID is your unique user ID, not your username. You can find it in your
+                                        settings.)</b>
+                                    <br/>
+
+                                    <b>If you have not had trending or buy bot set up, please message @professor_nahm or
+                                    @Winslowbankz on Telegram first to set up your token.</b>
                                 </p>
-                                <br />
+                                <br/>
                                 <span className="relative flex justify-center">
                           <div
                               className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"
