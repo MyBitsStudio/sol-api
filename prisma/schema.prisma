@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDU0OGY3NDgtYjIwYy00NDhhLTg2MzgtMTQ0YzQxOWVmYzViIiwidGVuYW50X2lkIjoiY2FiOWM4NzY4NjBjMjBiZTQ5YWQ3NTRiYzQyZmYxZjIzMmZmOTI3ZGI1NmU4MWFiZjVkYzVjOGRmNWVhMGZhMSIsImludGVybmFsX3NlY3JldCI6ImU5ODZhNjdjLWYzZjUtNDM4Mi05ODc5LTYyZTI0OTg2NTgyMyJ9.dZs0ULerOQpK6xPFknzH66b11aMZw0sqZ-2mbAlhWec"
+  url      = env("DB_URL")
 }
 
 model TokenBuy {
