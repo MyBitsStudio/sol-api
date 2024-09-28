@@ -50,13 +50,15 @@ export async function sendBuyMessage(details: BuyMessage) {
             const tran = link(bold`🔗`, 'https://solscan.io/tx/' + details.details.signature);
             const chart = link(bold`📊`, 'https://dexscreener.com/solana/' + details.details.tokenAddress);
             const trending = link(bold`🎰`, 'https://t.me/WIFTRENDING/4971/4984');
-            const support = link(bold`📩`, 'https://t.me/professor_nahm');
+            const support = link(bold`📩`, 'https://t.me/wif_professor');
             const trend = details.trending === -1 ? `` : link(bold`🎰 TRENDING ${details.trending} 🎰`, 'https://t.me/WIFTRENDING/4971/4984') ;
             const ad = link(bold`🎁 BUY AD`, 'https://www.wiftrending.app');
 
             let ad1, ad2, ad3, ad4;
 
             const ads = await prisma.ads.findMany();
+
+            const anim = details.details.gif === "none" ? "https://igate.email/wif_assets/WifBuy.mp4" : details.details.gif;
 
             ad1 = ads[0] ? link(bold`🎰 ${ads[0].text}`, ads[0].url) : ad;
             ad2 = ads[1] ? link(bold`🎰 ${ads[1].text}`, ads[1].url) : ad;
@@ -87,7 +89,7 @@ export async function sendBuyMessage(details: BuyMessage) {
                         channel = parseInt(channels[i]);
                     }
 
-                    await bot.telegram.sendAnimation(channel, "https://igate.email/wif_assets/WifBuy.mp4", {
+                    await bot.telegram.sendAnimation(channel, anim, {
                         caption: format,
                         message_thread_id: message_thread
                     }).catch((err) => {
@@ -164,7 +166,7 @@ export async function updateTrendingMessage() {
         for(let i = 0; i < formatted.length; i++) {
             format = fmt`${format} ${link(bold`${formatted[i]}`, trend[i].link)} \n\n`;
             if(i === formatted.length - 1){
-                format = fmt`${format} \n\n ${link(bold`🎰 BUY TRENDING`, 'https://www.wiftrending.app')}`;
+                format = fmt`${format} \n\n ${link(bold`🎰 BUY TRENDING 🎰`, 'https://www.wiftrending.app')}`;
             }
         }
 

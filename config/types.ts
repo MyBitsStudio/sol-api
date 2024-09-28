@@ -66,6 +66,7 @@ export interface Details {
     tokenAddress: string;
     botChannels: string[];
     tag: string;
+    gif: string;
 }
 
 export interface BuyMessage {

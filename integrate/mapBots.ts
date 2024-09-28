@@ -4,12 +4,10 @@ import {collectInfo, collectTrending} from "@/integrate/collect";
 
 export async function mapBots(details: Details) {
     if (details === null) {
-        console.log("No Data 4");
         return;
     }
 
     if (details === undefined) {
-        console.log("No Data 5");
         return;
     }
 
@@ -25,7 +23,6 @@ export async function mapBots(details: Details) {
 
     if (buy) {
         if(buy.expires < new Date()){
-            console.log("Expired 2");
             return;
         }
 

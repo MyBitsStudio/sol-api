@@ -137,13 +137,13 @@ export function PinBot(props: { toggle: MouseEventHandler<HTMLButtonElement> | u
                         }), "/api/pin/", true), {
                             pending: 'Submitting...',
                             success: 'Purchase successful. You will receive a message to start your pin!',
-                            error: 'Submission failed. Please contact @professor_nahm for support.'
+                            error: 'Submission failed. Please contact @wif_professor for support.'
                         }).then(r => {
                             console.log(r);
                             setLoading(false);
                         }).catch(e => {
                             console.error(e);
-                            toast.error("Submission failed. Please contact @professor_nahm for support.");
+                            toast.error("Submission failed. Please contact @wif_professor for support.");
                         });
                     } else {
                         toast.success("Error confirming transaction");
@@ -181,6 +181,8 @@ export function PinBot(props: { toggle: MouseEventHandler<HTMLButtonElement> | u
                                 <p className={"text-center"}>
                                    Purchase a pin post in our Lounge! Get the exposure you need to bump your token.
                                     <br/>
+
+                                    <b>Pin Post Cost 1 SOL and includes a spot on our daily AMA</b>
                                 </p>
                                 <br />
                                 <span className="relative flex justify-center">

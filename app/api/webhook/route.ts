@@ -111,7 +111,8 @@ export async function POST(req: Request){
                 tokenName: user.tokenName,
                 tokenAddress: user.tokenAddress,
                 botChannels: user.bots,
-                tag: user.tag
+                tag: user.tag,
+                gif: user.gif
             }
 
             void mapBots(details);

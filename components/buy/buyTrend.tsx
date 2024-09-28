@@ -185,13 +185,13 @@ export function TrendBot(props: { toggle: MouseEventHandler<HTMLButtonElement> |
                         }), "/api/trend/", true), {
                             pending: 'Submitting...',
                             success: 'Purchase successful. Your trending will start soon!',
-                            error: 'Submission failed. Please contact @professor_nahm for support.'
+                            error: 'Submission failed. Please contact @wif_professor for support.'
                         }).then(r => {
                             console.log(r);
                             setLoading(false);
                         }).catch(e => {
                             console.error(e);
-                            toast.error("Submission failed. Please contact @professor_nahm for support.");
+                            toast.error("Submission failed. Please contact @wif_professor for support.");
                         });
                     } else {
                         toast.success("Error confirming transaction");
@@ -236,7 +236,7 @@ export function TrendBot(props: { toggle: MouseEventHandler<HTMLButtonElement> |
                                         settings.)</b>
                                     <br/>
 
-                                    <b>If you have not had trending or buy bot set up, please message @professor_nahm or
+                                    <b>If you have not had trending or buy bot set up, please message @wif_professor or
                                     @Winslowbankz on Telegram first to set up your token.</b>
                                 </p>
                                 <br/>

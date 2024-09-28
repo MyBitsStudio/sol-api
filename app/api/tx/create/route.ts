@@ -17,8 +17,6 @@ export async function POST(req: Request) {
 
         let transaction = new Transaction();
 
-        console.log("amount", webhookData.amount)
-
         transaction.add(
             SystemProgram.transfer({
                 fromPubkey: payer,
@@ -27,12 +25,10 @@ export async function POST(req: Request) {
             })
         );
 
-        console.log("transaction", transaction)
 
         const blockHash = (await connection.getLatestBlockhash("confirmed"))
             .blockhash;
 
-        console.log("blockHash", blockHash)
 
         transaction.feePayer = payer;
         transaction.recentBlockhash = blockHash;
@@ -42,11 +38,8 @@ export async function POST(req: Request) {
             verifySignatures: true,
         });
 
-        console.log("serializedTransaction", serializedTransaction)
 
         const transactionBase64 = serializedTransaction.toString("base64");
-
-        console.log("transactionBase64", transactionBase64)
 
         return NextResponse.json({tx: transactionBase64});
     } catch (error) {
