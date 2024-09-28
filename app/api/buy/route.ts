@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {prisma} from "@/utils/pris";
-import {sendInfoMessage} from "@/integrate/infoBot";
+import {sendInfoMessage} from "@/app/api/webhook/route";
 
 export async function POST(req: Request) {
     const webhookData = await req.json()
