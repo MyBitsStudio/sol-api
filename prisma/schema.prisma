@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DB_URL")
+  url      = env("mongodb+srv://wif-api-admin:vSk1Yy67d9FXQxaf@wif-api.1hkkx.mongodb.net/base?retryWrites=true&w=majority&appName=wif-api")
 }
 
 model TokenBuy {
@@ -23,6 +23,8 @@ model TokenBuy {
   expires      DateTime
   gif          String
   link         String
+
+  @@map("TokenBuy")
 }
 
 model Trending {
@@ -32,6 +34,8 @@ model Trending {
   tokenAddress String
   sol          Float
   expiresAt    DateTime
+
+  @@map("Trending")
 }
 
 model Shill {
@@ -42,6 +46,8 @@ model Shill {
   channels     String[]
   expiresAt    DateTime
   message      String
+
+  @@map("Shill")
 }
 
 model BotChannels {
@@ -49,6 +55,8 @@ model BotChannels {
   createdAt DateTime @default(now())
   tokenKey  String   @unique
   channels  String[]
+
+  @@map("BotChannels")
 }
 
 model TrendPosition {
@@ -61,6 +69,8 @@ model TrendPosition {
   position     Int
   price        String
   cap          Int
+
+  @@map("TrendPosition")
 }
 
 model TrendingQueue {
@@ -72,6 +82,8 @@ model TrendingQueue {
   tag          String
   telegram     String
   link         String
+
+  @@map("TrendingQueue")
 }
 
 model Ads {
@@ -81,6 +93,8 @@ model Ads {
   text      String
   url       String
   expiresAt DateTime
+
+  @@map("Ads")
 }
 
 model AdQueue {
@@ -91,12 +105,16 @@ model AdQueue {
   url       String
   telegram  String
   time      Int
+
+  @@map("AdQueue")
 }
 
 model Prices {
   id     String   @id @default(auto()) @map("_id") @db.ObjectId
   type   String
   prices String[]
+
+  @@map("Prices")
 }
 
 model BuyBotWaiting {
@@ -109,6 +127,8 @@ model BuyBotWaiting {
   telegram     String
   link         String
   channel      String
+
+  @@map("BuyBotWaiting")
 }
 
 model PinPost {
@@ -119,4 +139,6 @@ model PinPost {
   tag          String
   message      String
   telegram     String
+
+  @@map("PinPost")
 }
