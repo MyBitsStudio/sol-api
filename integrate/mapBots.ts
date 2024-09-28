@@ -33,7 +33,7 @@ export async function mapBots(details: Details) {
             trending = trend.position;
         }
 
-        void collectInfo(details, buy, trending);
+        await collectInfo(details, buy, trending);
     } else {
         console.log("No Buy");
     }

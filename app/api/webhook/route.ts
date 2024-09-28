@@ -78,7 +78,6 @@ export async function POST(req: Request){
                     swapping = transformData(swap[key]);
                 }
 
-
                 console.log("swapping", swapping);
                 console.log("swapping mint", swapping[0].mint);
                 token = swapping[0].mint;
@@ -115,7 +114,7 @@ export async function POST(req: Request){
                 gif: user.gif
             }
 
-            void mapBots(details);
+            await mapBots(details);
 
             return NextResponse.json({ ok: true })
 
