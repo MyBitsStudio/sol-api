@@ -10,6 +10,8 @@ import {Telegraf} from "telegraf";
 import {convertNumber} from "@/utils/misc";
 import {bold, fmt, link} from "telegraf/format";
 
+const connection = new Connection(NETWORK, 'confirmed');
+
 export async function POST(req: Request){
     const webhookData = await req.json()
 
@@ -119,7 +121,138 @@ export async function POST(req: Request){
                 gif: user.gif
             }
 
-            await mapBots(details);
+            const trend = await prisma.trendPosition.findUnique({
+                where: {tokenAddress: details.tokenAddress},
+            })
+
+            let trending = -1;
+
+            if (user) {
+                if(user.expires < new Date()){
+                    console.log("Expired 1");
+                    return;
+                }
+
+                if(trend){
+                    trending = trend.position;
+                }
+
+                const trans: ParsedTransactionWithMeta | null = await connection.getParsedTransaction(details.signature, {maxSupportedTransactionVersion: 0});
+
+                if (!trans) {
+                    console.log("No Transaction");
+                    return;
+                }
+
+                let {preTokenBalances, postTokenBalances} = trans.meta as ParsedTransactionMeta;
+                let pre = -1, post = 0, balanceChange: string = "0";
+                let pres: number[] = [], posts:number[] = [];
+
+                preTokenBalances?.forEach((balance, index) => {
+                    if(balance.mint === user.tokenAddress){
+                        pres.push(balance.uiTokenAmount.uiAmount!);
+                    }
+                });
+
+                postTokenBalances?.forEach((balance, index) => {
+                    if(balance.mint === user.tokenAddress){
+                        posts.push(balance.uiTokenAmount.uiAmount!);
+                    }
+                });
+
+                if(pres.length > 0){
+                    pre = Math.max(...pres);
+                }
+
+                if(pres.length > 1){
+                    post = Math.max(...posts);
+                }
+
+
+                if(pre === -1){
+                    console.log("No Pre");
+                } else if(pre === 0){
+                    balanceChange = "100";
+                } else {
+                    balanceChange = (-((post - pre) / pre) * 100).toFixed(3) + "%";
+                }
+
+                let sol_price = 0;
+
+                await requestAPINoBody(
+                    {
+                        accept: 'application/json',
+                    },
+                    'GET',
+                    'https://api-v3.raydium.io/pools/info/mint?mint1=So11111111111111111111111111111111111111112&poolType=all&poolSortField=default&sortType=desc&pageSize=1&page=1',
+                    false
+                ).then((res) => {
+                    const price = res.data.data[0].price;
+                    console.log(price);
+                    sol_price = price;
+                }).catch((error) => {
+                    console.error(error);
+                });
+
+                const spent = details.sol * sol_price;
+
+                let marketCap :number = 0, tokenPrice : number = 0;
+
+
+                await requestAPINoBody(
+                    {
+                        accept: 'application/json',
+                        'X-Billing-Token' : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ.eyJpc3MiOiJuYWRsZXMiLCJpYXQiOiIxNzI1NDI3NTA3IiwicHVycG9zZSI6ImFwaV9hdXRoZW50aWNhdGlvbiIsInN1YiI6ImVkNjMzYWQ2NmJkNTRjMzM4ZTlkMDM1ZDAzY2JiYTgyIn0.GLJ4kzLb9wtaBDeYfB9ECOn7sJBDavBK3Aok6XHv98I"
+                    },
+                    'GET',
+                    `https://solana.p.nadles.com/tokens/${user.tokenAddress}`,
+                    false
+                ).then((res) => {
+                    if(res.pools) {
+                        if (res.pools.length === 0) {
+                            marketCap = -1;
+                            tokenPrice = -1;
+                        } else {
+                            marketCap = (res.pools[0].marketCap.usd).toFixed(0);
+                            tokenPrice = (res.pools[0].price.usd).toFixed(8);
+                        }
+                    }
+
+                });
+
+                const buyMessage : BuyMessage = {
+                    details: details,
+                    spent: spent,
+                    position: balanceChange,
+                    cap: marketCap,
+                    price: ""+tokenPrice,
+                    trending: trending
+                }
+
+                await checkAds().then(async () => {
+                    console.log("Ads Checked");
+                    await collectTrending(details).then(async () => {
+                        console.log("Trending Collected");
+                        await mapTrending(details).then(async () => {
+                            console.log("Trending Mapped");
+                            await sendBuyMessage(buyMessage).then(async () => {
+                                console.log("Buy Message Sent");
+                                await updateTrendingMessage().then(() => {
+                                    console.log("Trending Message Updated");
+                                    return NextResponse.json({ok: true})
+                                })
+                            })
+                        })
+                    })
+                }).finally(() => {
+                    console.log("All Done");
+                    return NextResponse.json({ ok: true })
+                });
+
+
+            } else {
+                console.log("No Buy");
+            }
 
             return NextResponse.json({ ok: true })
 
@@ -132,173 +265,6 @@ export async function POST(req: Request){
         console.error(error);
         return NextResponse.json({ error: "An error occurred while processing the webhook request"})
     }
-}
-
-async function mapBots(details: Details) {
-    if (details === null) {
-        console.log("No Data 4");
-        return;
-    }
-
-    if (details === undefined) {
-        console.log("No Data 5");
-        return;
-    }
-
-    const buy = await prisma.tokenBuy.findUnique({
-        where: {id: details.id},
-    })
-
-    const trend = await prisma.trendPosition.findUnique({
-        where: {tokenAddress: details.tokenAddress},
-    })
-
-    let trending = -1;
-
-    if (buy) {
-        if(buy.expires < new Date()){
-            console.log("Expired 1");
-            return;
-        }
-
-        if(trend){
-            trending = trend.position;
-        }
-
-        await collectInfo(details, buy, trending);
-    } else {
-        console.log("No Buy");
-    }
-
-}
-
-async function collectInfo(details: Details, buy:
-    {
-        id: string;
-        createdAt: Date;
-        tokenName: string;
-        tokenAddress: string;
-        bots: string[];
-        expires: Date;
-        gif: string;
-    } | null, trending: number) {
-
-    const connection = new Connection(NETWORK, 'confirmed');
-
-    if (details === null) {
-        console.log("No Data 4");
-        return;
-    }
-
-    if (details === undefined) {
-        console.log("No Data 5");
-        return;
-    }
-
-    if (buy === null) {
-        console.log("No Buy");
-        return;
-    }
-
-    const trans: ParsedTransactionWithMeta | null = await connection.getParsedTransaction(details.signature, {maxSupportedTransactionVersion: 0});
-
-    if (!trans) {
-        console.log("No Transaction");
-        return;
-    }
-
-    let {preTokenBalances, postTokenBalances} = trans.meta as ParsedTransactionMeta;
-    let pre = -1, post = 0, balanceChange: string = "0";
-    let pres: number[] = [], posts:number[] = [];
-
-    preTokenBalances?.forEach((balance, index) => {
-        if(balance.mint === buy.tokenAddress){
-            pres.push(balance.uiTokenAmount.uiAmount!);
-        }
-    });
-
-    postTokenBalances?.forEach((balance, index) => {
-        if(balance.mint === buy.tokenAddress){
-            posts.push(balance.uiTokenAmount.uiAmount!);
-        }
-    });
-
-    if(pres.length > 0){
-        pre = Math.max(...pres);
-    }
-
-    if(pres.length > 1){
-        post = Math.max(...posts);
-    }
-
-
-    if(pre === -1){
-        console.log("No Pre");
-    } else if(pre === 0){
-        balanceChange = "100";
-    } else {
-        balanceChange = (-((post - pre) / pre) * 100).toFixed(3) + "%";
-    }
-
-    let sol_price = 0;
-
-    await requestAPINoBody(
-        {
-            accept: 'application/json',
-        },
-        'GET',
-        'https://api-v3.raydium.io/pools/info/mint?mint1=So11111111111111111111111111111111111111112&poolType=all&poolSortField=default&sortType=desc&pageSize=1&page=1',
-        false
-    ).then((res) => {
-        const price = res.data.data[0].price;
-        console.log(price);
-        sol_price = price;
-    }).catch((error) => {
-        console.error(error);
-    });
-
-    const spent = details.sol * sol_price;
-
-    let marketCap :number = 0, tokenPrice : number = 0;
-
-
-    await requestAPINoBody(
-        {
-            accept: 'application/json',
-            'X-Billing-Token' : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ.eyJpc3MiOiJuYWRsZXMiLCJpYXQiOiIxNzI1NDI3NTA3IiwicHVycG9zZSI6ImFwaV9hdXRoZW50aWNhdGlvbiIsInN1YiI6ImVkNjMzYWQ2NmJkNTRjMzM4ZTlkMDM1ZDAzY2JiYTgyIn0.GLJ4kzLb9wtaBDeYfB9ECOn7sJBDavBK3Aok6XHv98I"
-        },
-        'GET',
-        `https://solana.p.nadles.com/tokens/${buy.tokenAddress}`,
-        false
-    ).then((res) => {
-        if(res.pools) {
-            if (res.pools.length === 0) {
-                marketCap = -1;
-                tokenPrice = -1;
-            } else {
-                marketCap = (res.pools[0].marketCap.usd).toFixed(0);
-                tokenPrice = (res.pools[0].price.usd).toFixed(8);
-            }
-        }
-
-    });
-
-    const buyMessage : BuyMessage = {
-        details: details,
-        spent: spent,
-        position: balanceChange,
-        cap: marketCap,
-        price: ""+tokenPrice,
-        trending: trending
-    }
-
-    void checkAds();
-
-    void sendBuyMessage(buyMessage);
-
-    void collectTrending(details);
-
-    void mapTrending(details);
 }
 
 async function checkAds(){
@@ -508,8 +474,6 @@ async function mapTrending(details:Details){
             }
         });
     }
-
-    void updateTrendingMessage();
 
 }
 
