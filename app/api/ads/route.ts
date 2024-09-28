@@ -20,16 +20,6 @@ export async function POST(req: Request) {
             }
         })
 
-        // await sendInfoMessage({
-        //     chatId: 7267264192,
-        //     message: `Trending is queued for ${webhookData.address}`
-        // })
-        //
-        // await sendInfoMessage({
-        //     chatId: webhookData.telegram,
-        //     message: `Your trending has been queued.`
-        // })
-
         await sendInfoMessage({
             chatId: -1002454838436,
             message: `Ad requested for ${webhookData.address}`
