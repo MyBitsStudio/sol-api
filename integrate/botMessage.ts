@@ -8,10 +8,12 @@ import {convertNumber} from "@/utils/misc";
 export async function sendBuyMessage(details: BuyMessage) {
 
     if (details === null) {
+        console.log("No Data 4");
         return;
     }
 
     if (details === undefined) {
+        console.log("No Data 5");
         return;
     }
 
@@ -88,6 +90,8 @@ export async function sendBuyMessage(details: BuyMessage) {
                     } else {
                         channel = parseInt(channels[i]);
                     }
+
+                    console.log("sending...");
 
                     await bot.telegram.sendAnimation(channel, anim, {
                         caption: format,

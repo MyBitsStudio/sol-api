@@ -20,20 +20,24 @@ export async function collectInfo(details: Details, buy:
     const connection = new Connection(NETWORK, 'confirmed');
 
     if (details === null) {
+        console.log("No Data 4");
         return;
     }
 
     if (details === undefined) {
+        console.log("No Data 5");
         return;
     }
 
     if (buy === null) {
+        console.log("No Buy");
         return;
     }
 
     const trans: ParsedTransactionWithMeta | null = await connection.getParsedTransaction(details.signature, {maxSupportedTransactionVersion: 0});
 
     if (!trans) {
+        console.log("No Transaction");
         return;
     }
 
@@ -80,7 +84,9 @@ export async function collectInfo(details: Details, buy:
         'https://api-v3.raydium.io/pools/info/mint?mint1=So11111111111111111111111111111111111111112&poolType=all&poolSortField=default&sortType=desc&pageSize=1&page=1',
        false
     ).then((res) => {
-       sol_price = res.data.data[0].price;
+        const price = res.data.data[0].price;
+        console.log(price);
+       sol_price = price;
     }).catch((error) => {
         console.error(error);
     });
