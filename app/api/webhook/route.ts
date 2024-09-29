@@ -37,7 +37,6 @@ export async function POST(req: Request){
 
         console.log("build", build);
 
-
         if (transformedObject.transactionError !== null && transformedObject.transactionError !== undefined) {
             console.log("Transaction Error", transformedObject.transactionError);
             return NextResponse.json({ error: "Transaction Error"})
@@ -74,7 +73,7 @@ export async function POST(req: Request){
 
             const events = transformedObject.events;
 
-            console.log("events", events);
+            //console.log("events", events);
 
             const swap = events.swap;
 
@@ -85,8 +84,8 @@ export async function POST(req: Request){
                     swapping = transformData(swap[key]);
                 }
 
-                console.log("swapping", swapping);
-                console.log("swapping mint", swapping[0].mint);
+                //console.log("swapping", swapping);
+                //console.log("swapping mint", swapping[0].mint);
                 token = swapping[0].mint;
             } else {
                 console.log("No swap");
@@ -195,6 +194,11 @@ export async function POST(req: Request){
                 });
 
                 const spent = details.sol * sol_price;
+
+                if(spent < 5){
+                    console.log("Less than 5");
+                    return NextResponse.json({ error: "Less than 5"})
+                }
 
                 let marketCap :number = 0, tokenPrice : number = 0;
 
