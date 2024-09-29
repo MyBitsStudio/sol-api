@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client/edge'
-import {withAccelerate} from "@prisma/extension-accelerate";
+import { PrismaClient } from "@prisma/client"
 
 let prisma: PrismaClient
 
 // eslint-disable-next-line prefer-const
-// @ts-ignore
-prisma = new PrismaClient().$extends(withAccelerate())
+prisma = new PrismaClient()
 
 void prisma.$connect()
 
