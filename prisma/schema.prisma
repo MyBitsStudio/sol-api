@@ -23,6 +23,7 @@ model TokenBuy {
   expires      DateTime
   gif          String
   link         String
+  minBuy       Int
 
   @@map("TokenBuy")
 }
