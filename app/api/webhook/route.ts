@@ -195,10 +195,10 @@ export async function POST(req: Request){
 
                 const spent = details.sol * sol_price;
 
-                if(spent < 5){
-                    console.log("Less than 5");
-                    return NextResponse.json({ error: "Less than 5"})
-                }
+                // if(spent < 5){
+                //     console.log("Less than 5");
+                //     return NextResponse.json({ error: "Less than 5"})
+                // }
 
                 let marketCap :number = 0, tokenPrice : number = 0;
 
