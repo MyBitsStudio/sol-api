@@ -593,8 +593,8 @@ async function sendBuyMessage(details: BuyMessage) {
 
 async function updateTrendingMessage() {
 
-    const messageId = 4984;
-    const bot = new Telegraf("7206357706:AAFf4355Lr1KralPI7v_qy4h_1ZCaZ5P3yQ", {
+    const messageId = -1;
+    const bot = new Telegraf("8013395656:AAHKFh1K-hYKgGdgV4ugTvWDbTGRO-a0oFw", {
         telegram: {
             apiMode: 'bot',
             testEnv: false
@@ -603,9 +603,9 @@ async function updateTrendingMessage() {
 
     // @ts-ignore
     if(messageId === -1){
-        await bot.telegram.sendAnimation(-1002149168327, "https://igate.email/wif_assets/WifBuy.mp4", {
+        await bot.telegram.sendAnimation(-1002232500109, "https://igate.email/wif_assets/WifBuy.mp4", {
             caption: "PIN ME AND DONT DELETE!!",
-            message_thread_id: 4971
+            message_thread_id: 3013
         }).then((res) => {
             console.log("Trending Bot Pin Message", res);
         }).catch((err) => {
