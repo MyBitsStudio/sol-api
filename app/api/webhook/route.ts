@@ -650,7 +650,7 @@ async function updateTrendingMessage() {
             }
         }
 
-        await bot.telegram.editMessageCaption(-1002149168327, messageId, undefined, format, {
+        await bot.telegram.editMessageCaption(-1002232500109, messageId, undefined, format, {
 
         }).catch((err) => {
             console.log(`Shit, encountered an error `, err)
