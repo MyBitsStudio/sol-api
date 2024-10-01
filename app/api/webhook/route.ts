@@ -593,7 +593,7 @@ async function sendBuyMessage(details: BuyMessage) {
 
 async function updateTrendingMessage() {
 
-    const messageId = -1;
+    const messageId = 3020;
     const bot = new Telegraf("8013395656:AAHKFh1K-hYKgGdgV4ugTvWDbTGRO-a0oFw", {
         telegram: {
             apiMode: 'bot',
