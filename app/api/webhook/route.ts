@@ -527,9 +527,9 @@ async function sendBuyMessage(details: BuyMessage) {
             const cap = bold`🏦: $ ${details.price} ( $${caps} )`;
             const tran = link(bold`🔗`, 'https://solscan.io/tx/' + details.details.signature);
             const chart = link(bold`📊`, 'https://dexscreener.com/solana/' + details.details.tokenAddress);
-            const trending = link(bold`🎰`, 'https://t.me/WIFTRENDING/4971/4984');
+            const trending = link(bold`🎰`, 'https://t.me/WIFTRENDINGCASINO/3013/3020');
             const support = link(bold`📩`, 'https://t.me/wif_professor');
-            const trend = details.trending === -1 ? `` : link(bold`🎰 TRENDING ${details.trending} 🎰`, 'https://t.me/WIFTRENDING/4971/4984') ;
+            const trend = details.trending === -1 ? `` : link(bold`🎰 TRENDING ${details.trending} 🎰`, 'https://t.me/WIFTRENDINGCASINO/3013/3020') ;
             const ad = link(bold`🎁 BUY AD`, 'https://www.wiftrending.app');
 
             let ad1, ad2, ad3, ad4;
