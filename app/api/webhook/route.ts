@@ -183,10 +183,10 @@ export async function POST(req: Request){
                         accept: 'application/json',
                     },
                     'GET',
-                    'https://api-v3.raydium.io/pools/info/mint?mint1=So11111111111111111111111111111111111111112&poolType=all&poolSortField=default&sortType=desc&pageSize=1&page=1',
+                    'https://api.jup.ag/price/v2?ids=So11111111111111111111111111111111111111112',
                     false
                 ).then((res) => {
-                    const price = res.data.data[0].price;
+                    const price = res.data.So11111111111111111111111111111111111111112.price;
                     console.log(price);
                     sol_price = price;
                 }).catch((error) => {
