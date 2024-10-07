@@ -206,10 +206,10 @@ export async function POST(req: Request){
                 await requestAPINoBody(
                     {
                         accept: 'application/json',
-                        'X-Billing-Token' : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ.eyJpc3MiOiJuYWRsZXMiLCJpYXQiOiIxNzI1NDI3NTA3IiwicHVycG9zZSI6ImFwaV9hdXRoZW50aWNhdGlvbiIsInN1YiI6ImVkNjMzYWQ2NmJkNTRjMzM4ZTlkMDM1ZDAzY2JiYTgyIn0.GLJ4kzLb9wtaBDeYfB9ECOn7sJBDavBK3Aok6XHv98I"
+                        'x-api-key' : "c0d157df-d2cd-41b6-8b20-1aba876610a3"
                     },
                     'GET',
-                    `https://solana.p.nadles.com/tokens/${user.tokenAddress}`,
+                    `https://data.solanatracker.io/tokens/${user.tokenAddress}`,
                     false
                 ).then((res) => {
                     if(res.pools) {
@@ -452,10 +452,10 @@ async function mapTrending(details:Details){
         await requestAPINoBody(
             {
                 accept: 'application/json',
-                'X-Billing-Token' : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ.eyJpc3MiOiJuYWRsZXMiLCJpYXQiOiIxNzI1NDI3NTA3IiwicHVycG9zZSI6ImFwaV9hdXRoZW50aWNhdGlvbiIsInN1YiI6ImVkNjMzYWQ2NmJkNTRjMzM4ZTlkMDM1ZDAzY2JiYTgyIn0.GLJ4kzLb9wtaBDeYfB9ECOn7sJBDavBK3Aok6XHv98I"
+                'x-api-key' : "c0d157df-d2cd-41b6-8b20-1aba876610a3"
             },
             'GET',
-            `https://solana.p.nadles.com/tokens/${reorder[i].tokenAddress}`,
+            `https://data.solanatracker.io/tokens/${reorder[i].tokenAddress}`,
             false
         ).then((res) => {
             if(res.pools) {
